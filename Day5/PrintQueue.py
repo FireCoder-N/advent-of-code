@@ -13,23 +13,28 @@ def thieves_list(rules):
     return rules
 
 def check_updates(rules, updates):
-    total = 0
+    total1 = 0
+    total2 = 0
+
     for update in updates:
         update = [int(a) for a in update.strip().split(",")]
-        total += check_update(rules, update)
+        total1 += check_update(rules, update)
 
-    return total
+        new_update = fix_update(rules, update.copy())
+        if new_update != update:
+            total2 += new_update[int(len(new_update)/2)]
+
+    return total1, total2
 
 
 def check_update(rules, update):
     if len(update) == 1:
         return True
     
-    root = update[0]
     new_rules = [rule for rule in rules if rule[0] in update and rule[1] in update]
 
     for rule in new_rules:
-        if rule[1] == root:
+        if rule[1] == update[0]:
             return False
 
     if check_update(new_rules, update[1:]):
@@ -40,19 +45,23 @@ def check_update(rules, update):
 
 def fix_update(rules, update):
     if len(update) == 1:
-        return True
-    
-    root = update[0]
+        return update
+  
     new_rules = [rule for rule in rules if rule[0] in update and rule[1] in update]
 
-    for rule in new_rules:
-        if rule[1] == root:
-            return False
+    while True:
+        for rule in new_rules:
+            if rule[1] == update[0]:
+                for i in range(len(update)):
+                    if update[i] == rule[0]:
+                        update[i] = rule[1]
+                update[0] = rule[0]
+                break
+        else:
+            break
 
-    if check_update(new_rules, update[1:]):
-        return update[int(len(update)/2)]
-    else:
-        return 0
+    return [update[0]] + fix_update(new_rules, update[1:])
+    
         
 
 if __name__ == "__main__":
