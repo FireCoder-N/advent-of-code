@@ -5,12 +5,14 @@ def read_data():
     return lines
 
 def expand(inp):
-    new = ""
+    new = []
     for i, num in enumerate(inp):
         if i % 2 == 0:
-            new += int(num)*f"{i//2}"
+            for _ in range(int(num)):
+                new.append(f"{i//2}")
         else:
-            new += int(num)*"."
+            for _ in range(int(num)):
+                new.append(".")
 
     return new
 
@@ -25,7 +27,7 @@ def fragment(inp):
                 return inp
                 
             if inp[last] != ".":
-                inp = inp[:i] + inp[last] + inp[i+1:last] + inp[i] + inp[last+1:]
+                inp = inp[:i] + [inp[last]] + inp[i+1:last] + [inp[i]] + inp[last+1:]
 
 def checksum(inp):
     total = 0
