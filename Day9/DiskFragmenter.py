@@ -15,23 +15,28 @@ def expand(inp):
     return new
 
 def fragment(inp):
+    last = len(inp)-1
     for i in range(len(inp)):
         if inp[i] == ".":
-            for j in range(len(inp)-1,0,-1):
-                if j <= i:
-                    return inp
+            while inp[last] == ".":
+                last -= 1
+
+            if last <= i:
+                return inp
                 
-                if inp[j] != ".":
-                    inp = inp[:i] + inp[j] + inp[i+1:j] + inp[i] + inp[j+1:]
-                    break
+            if inp[last] != ".":
+                inp = inp[:i] + inp[last] + inp[i+1:last] + inp[i] + inp[last+1:]
 
 def checksum(inp):
     total = 0
     for i, num in enumerate(inp):
+        if num == ".":
+            continue
         total += int(num)*i
+
     return total
 
 if __name__ == "__main__":
     inp = read_data()[0].strip()
-    total = fragment(expand(inp))
-    print(total)
+    fr = fragment(expand(inp))
+    print(checksum(fr))
