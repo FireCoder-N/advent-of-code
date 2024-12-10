@@ -1,5 +1,3 @@
-from math import copysign
-
 def read_data():
     with open('Day8/data.txt') as f:
         lines = f.readlines()
